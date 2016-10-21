@@ -59,8 +59,7 @@ namespace SQCommunicator{
 			inline void datagram(std::string const& value) {_datagram = value; };
 
 			void build(SQ::SQPacket::SQPacket const& packet);
-			//void extract(SQ::SQPacket::SQPacket & packet){};
-                        void extract(char* msg,SQ::SQPacket::SQPacket & packet);
+			void extract(SQ::SQPacket::SQPacket & packet){}; 
 
 			void read(SQ::SQPacket::SQPacket & packet, int const& buffersize = BUFFER_MEANSIZE) ;
 			void write(SQ::SQPacket::SQPacket const& packet, int const& buffersize = BUFFER_MEANSIZE) ;

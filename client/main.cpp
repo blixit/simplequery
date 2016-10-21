@@ -20,8 +20,6 @@ int main(int argc, char** argv) {
       p.data("dedede");
         com.extract(p);*/
         
-        
-
         client.sconnect("127.0.0.1",SQ::SQNetEntity::DEFAULT_PORT);  
 
         std::shared_ptr<SQ::SQCommunicator::SQCommunicator> pcom = std::move(client.com());

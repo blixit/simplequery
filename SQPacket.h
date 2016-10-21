@@ -22,13 +22,14 @@ namespace SQPacket{
 	    int _src;
 	    uchar _method;
 	    uchar _parameter; 
-			OptionsList _optionslist; //<! list of options for this query
+            OptionsList _optionslist; //<! list of options for this query
 	    std::string _data;
 		 
 
     public :
 	    SQPacket();
 	    SQPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, OptionsList list, std::string data );
+	    SQPacket(SQPacket const& p);
 	    ~SQPacket();
 
 		inline int dest() const{return _dest;}
