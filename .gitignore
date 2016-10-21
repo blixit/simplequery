@@ -1,0 +1,7 @@
+client/*.exe
+client/sqlog
+server/*.exe
+server/sqlog
+TODO
+main.pcc
+sqlog

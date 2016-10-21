@@ -1,0 +1,44 @@
+rm -rf simplequery.exe
+rm -rf libsimplequery.a  
+rm -rf *.o
+rm -rf *~
+g++ -o SQUtils.o -c SQUtils.cpp -W -Wall -std=c++11 -fPIC   -pthread 
+g++ -o SQException.o -c SQException.cpp -W -Wall -std=c++11 -fPIC   -pthread 
+g++ -o SQClient.o -c SQClient.cpp -W -Wall -std=c++11 -fPIC   -pthread 
+SQClient.cpp:16:40: warning: unused parameter ‘other’ [-Wunused-parameter]
+     SQClient::SQClient(const SQClient& other)  {
+                                        ^
+g++ -o SQCommunicator.o -c SQCommunicator.cpp -W -Wall -std=c++11 -fPIC   -pthread 
+g++ -o SQNetEntity.o -c SQNetEntity.cpp -W -Wall -std=c++11 -fPIC   -pthread 
+g++ -o SQServer.o -c SQServer.cpp -W -Wall -std=c++11 -fPIC   -pthread 
+SQServer.cpp:22:40: warning: unused parameter ‘other’ [-Wunused-parameter]
+     SQServer::SQServer(const SQServer& other)    {
+                                        ^
+SQServer.cpp:189:58: warning: unused parameter ‘packet’ [-Wunused-parameter]
+     void SQServer::on_read(SQ::SQPacket::SQPacket const& packet){
+                                                          ^
+g++ -o SQClientSession.o -c SQClientSession.cpp -W -Wall -std=c++11 -fPIC   -pthread 
+g++ -o SQPacket.o -c SQPacket.cpp -W -Wall -std=c++11 -fPIC   -pthread 
+ar rv -o libsimplequery.a   SQUtils.o SQException.o SQClient.o SQCommunicator.o SQNetEntity.o SQServer.o SQClientSession.o SQPacket.o
+ar: création de libsimplequery.a
+a - SQUtils.o
+a - SQException.o
+a - SQClient.o
+a - SQCommunicator.o
+a - SQNetEntity.o
+a - SQServer.o
+a - SQClientSession.o
+a - SQPacket.o
+cat SQEvents.h SQUtils.h SQException.h SQPacket.h SQCommunicator.h SQNetEntity.h SQClient.h SQServer.h > simplequery.h
+awk '!/(include)([\ ]+)\"/' SQEvents.h SQUtils.h SQException.h SQPacket.h SQCommunicator.h SQNetEntity.h SQClient.h SQServer.h > temp && mv temp simplequery.h 
+cp libsimplequery.a   client/
+cp simplequery.h client/
+cp libsimplequery.a   server/
+cp simplequery.h server/
+Compiling the executable ...
+g++ -o simplequery.exe SQException.o SQClient.o SQCommunicator.o SQNetEntity.o SQServer.o SQClientSession.o SQUtils.o SQPacket.o -pthread 
+/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o: dans la fonction « _start »:
+(.text+0x20): référence indéfinie vers « main »
+collect2: error: ld returned 1 exit status
+Makefile:24 : la recette pour la cible « exe » a échouée
+make: *** [exe] Erreur 1
