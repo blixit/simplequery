@@ -29,7 +29,9 @@ class Server : public SQ::SQNetEntity::SQServer{
 };
 
 int main(int argc, char** argv) { 
-   
+  
+  SQ::SQNetEntity::SQNetEntity::initializer();
+  
   Server server;
   server.DEBUGSTATE = true;
   server.port(SQ::SQNetEntity::DEFAULT_PORT); //1607
@@ -49,6 +51,8 @@ int main(int argc, char** argv) {
   }catch(SQ::SQException const& e){
       Log(std::string(e.what()),server.DEBUGSTATE) 
   }
+  
+  SQ::SQNetEntity::SQNetEntity::destroyer();
      
   	return 0;
 }

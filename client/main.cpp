@@ -6,8 +6,10 @@
 //using namespace std;
 
 int main(int argc, char** argv) { 
-   SQ::SQNetEntity::SQClient client;   
-   client.DEBUGSTATE = true;
+    SQ::SQNetEntity::SQNetEntity::initializer();
+   
+    SQ::SQNetEntity::SQClient client;   
+    client.DEBUGSTATE = true;
     try{
         SQ::SQPacket::OptionsList list;
       list.push_back(std::make_pair("content","sq"));
@@ -53,6 +55,7 @@ int main(int argc, char** argv) {
         //std::cout << "[Error] " << e.what() << std::endl;
         Log(std::string(e.what()),client.DEBUGSTATE);
     }
-     
-  	return 0;
+   
+    SQ::SQNetEntity::SQNetEntity::initializer(); 
+    return 0;
 }

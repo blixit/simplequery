@@ -224,9 +224,7 @@ namespace SQCommunicator{
 			int _is_server; //<! define server or client side
 			std::string _datagram; //<! datagram
 			//std::shared_ptr<SQ::SQPacket::SQPacket> _ptrPacket;
-
-			void wsaInit();
-            void wsaClean();
+ 
 
 		public:
 		    int _buffersize; //<! user chosen buffer size
@@ -244,8 +242,7 @@ namespace SQCommunicator{
 			inline void datagram(std::string const& value) {_datagram = value; };
 
 			void build(SQ::SQPacket::SQPacket const& packet);
-			//void extract(SQ::SQPacket::SQPacket & packet){};
-                        void extract(char* msg,SQ::SQPacket::SQPacket & packet);
+			void extract(SQ::SQPacket::SQPacket & packet); 
 
 			void read(SQ::SQPacket::SQPacket & packet, int const& buffersize = BUFFER_MEANSIZE) ;
 			void write(SQ::SQPacket::SQPacket const& packet, int const& buffersize = BUFFER_MEANSIZE) ;
@@ -276,6 +273,9 @@ namespace SQNetEntity{
         public:
             SQNetEntity();
             virtual ~SQNetEntity();
+            
+            static void initializer();
+            static void destroyer();
 
             virtual bool is_server();
 
@@ -293,6 +293,7 @@ namespace SQNetEntity{
             std::shared_ptr<SQCommunicator::SQCommunicator> _com;
 
         private:
+            static int _initializer;
             std::atomic<int> _is_running;
     };
 }

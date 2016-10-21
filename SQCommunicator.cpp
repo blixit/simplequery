@@ -9,13 +9,20 @@
 namespace SQ{
 namespace SQCommunicator{
     SQCommunicator::SQCommunicator(SOCKET const& s) : _sock(s),_time(0),_size(0),_datagram("") {
-        wsaInit();
+        //
     }
 
     SQCommunicator::~SQCommunicator(){
-        wsaClean(); 
+        //
     }
-
+    
+    /**
+     * Builds a string containing the informations of the given packet and store it in the datagram string attribute.
+     * This function checks either the list of options already contains a reserved option. 
+     * Reserved options already start with '#'. 
+     * @param packet the packet to convert
+     * @throw SQ::SQException if the list of options contains a reserved option
+     */
     void SQCommunicator::build(SQ::SQPacket::SQPacket const& packet){ 
         //checking reserved option 
         for(auto opt : packet.getOptionsList()){
@@ -69,7 +76,12 @@ namespace SQCommunicator{
 
         delete[] msg;
     }
-
+    
+    /**
+     * Extracts informations from the datagram attribute and fill the given packet with them.
+     * @param packet 
+     * @throw SQ::SQException
+     */
     void SQCommunicator::extract(SQ::SQPacket::SQPacket & packet){
         if(_datagram.size()==0)
             throw SQ::SQException("[SQCommunicator::Extract] The packet to extract is empty.");
@@ -144,7 +156,14 @@ namespace SQCommunicator{
         delete[] msg; 
 
     }
-
+    
+    /**
+     * Reads the data from network and fill the given packet with it.
+     * @param packet
+     * @param buffersize this parameter precises the max length expected for the incoming data.
+     * The maximum value is BUFFER_MAXSIZE.
+     * @throw SQ::SQException
+     */
     void SQCommunicator::read(SQ::SQPacket::SQPacket & packet, int const& buffersize){
         _buffersize = buffersize <= BUFFER_MINSIZE
                 ? BUFFER_MINSIZE
@@ -161,11 +180,16 @@ namespace SQCommunicator{
  
         _datagram = std::string(buffer,_buffersize);               
            
-	extract(buffer,packet);
+	extract(packet);
         
         delete [] buffer;
     }
 
+    /**
+     * Writes the packet to the network.
+     * @param packet 
+     * @param buffersize 
+     */
     void SQCommunicator::write(SQ::SQPacket::SQPacket const& packet, int const& buffersize){
         _buffersize = buffersize <= BUFFER_MINSIZE
                 ? BUFFER_MINSIZE
@@ -183,24 +207,6 @@ namespace SQCommunicator{
         if(sock_err==1)
             throw SQ::SQException("[SQCommunicator::write] Sending packet failed.");
     }
-
-    void SQCommunicator::wsaInit(){
-    #if defined(_WIN32) || defined(WIN32)
-        WSADATA wsa;
-        if(WSAStartup(MAKEWORD(2, 2), &wsa) < 0)
-        {
-            throw SQ::SQException("WSAStartup failed !");
-        }
-    #endif
-    }
-
-    void SQCommunicator::wsaClean(){
-    #if defined(_WIN32) || defined(WIN32)
-        WSACleanup();
-    #endif
-    }
-
-
 
 }
 }

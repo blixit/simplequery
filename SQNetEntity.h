@@ -18,6 +18,9 @@ namespace SQNetEntity{
         public:
             SQNetEntity();
             virtual ~SQNetEntity();
+            
+            static void initializer();
+            static void destroyer();
 
             virtual bool is_server();
 
@@ -35,6 +38,7 @@ namespace SQNetEntity{
             std::shared_ptr<SQCommunicator::SQCommunicator> _com;
 
         private:
+            static int _initializer;
             std::atomic<int> _is_running;
     };
 }
