@@ -8,10 +8,13 @@ class Server : public SQ::SQNetEntity::SQServer{
 
         void on_connect(SQ::SQNetEntity::SQFinalClient const& c){
             std::cout << " The client "+ SQ::PATCH::to_string(c.id) +" is connected on socket "+ SQ::PATCH::to_string(c.sock) +" ... " << std::endl;
+            std::cout << " # clients " << this->getClients().size() << std::endl;
         }
 
-        void on_leave(){
-            std::cout << " The client is disconnected ... " << std::endl;
+        void on_leave(SOCKET const& s){
+            std::vector<SQ::SQNetEntity::SQFinalClient> clients = this->getClients();
+            std::cout << " # clients " << this->getClients().size() << std::endl; 
+            std::cout << " The client on socket " << s << " is disconnected ... " << std::endl;
         }
 
         void on_read(SQ::SQPacket::SQPacket const& packet){
@@ -35,7 +38,7 @@ int main(int argc, char** argv) {
   Server server;
   server.DEBUGSTATE = true;
   server.port(SQ::SQNetEntity::DEFAULT_PORT); //1607
-  server.maxClients(1);
+  server.maxClients(2);
 
   std::cout << server.is_server() << std::endl;
   std::cout << server.isRunning() << std::endl;

@@ -345,8 +345,17 @@ namespace SQNetEntity{
       public:
         int id;
         SOCKET sock;
+        
         SQFinalClient(int const& i, SOCKET const& s) : id(i), sock(s){};
+        SQFinalClient(SQFinalClient const& c) : id(c.getId()), sock(c.getSock()){};
+        
         bool operator==(SQFinalClient const& rhs) const { return this->id == rhs.id && this->sock == rhs.sock; };
+        
+        int getId() const { return id;}
+        void setId(int id) { this->id = id;}
+        SOCKET getSock() const { return sock;}
+        void setSock(SOCKET s) { this->sock = s;}
+        
     };
   
     class SQServer : public SQNetEntity 
@@ -366,12 +375,14 @@ namespace SQNetEntity{
             inline int maxClients() const{ return _maxClients;}
             inline void maxClients(int const& value) { _maxClients = value > DEFAULT_MAX_CLIENT ? DEFAULT_MAX_CLIENT : (value < DEFAULT_CLIENT_NUMBER ? DEFAULT_CLIENT_NUMBER : value ) ;}
             inline int nbClients(){return _nbClients.load(std::memory_order_relaxed); }
+            std::vector<SQFinalClient> getClients(){ return this->_clients; }
+            void setClients(std::vector<SQFinalClient> c){ this->_clients = std::move(c); }
 
             int startService();
             void stopService();            
             
             virtual void on_connect(SQFinalClient const& c)=0;
-            virtual void on_leave()=0;
+            virtual void on_leave(SOCKET const& s)=0;
             virtual void on_read(SQ::SQPacket::SQPacket const& packet);
             
 
@@ -391,6 +402,7 @@ namespace SQNetEntity{
                          
             inline void sock(SOCKET const& value) { _sock = value;}
             inline void nbClients(int const& value){ _nbClients.store(value,std::memory_order_relaxed); }
+            
             inline bool addClientToQueue(){ if(nbClients()<DEFAULT_MAX_CLIENT) {_nbClients.store(nbClients()+1,std::memory_order_relaxed); return true; }else{return false;} }
             inline void delClientToQueue(){ if(nbClients()>0) _nbClients.store(nbClients()-1,std::memory_order_relaxed); }
             
