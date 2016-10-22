@@ -47,7 +47,8 @@ namespace SQNetEntity{
 
         return false; //this line void compilation failure
     }
-  
+    void SQNetEntity::on_read(SQ::SQPacket::SQPacket const& packet){   }
+    
     /**
      * This function listens messages from the network while the server is running.
      */

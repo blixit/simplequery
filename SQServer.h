@@ -57,7 +57,7 @@ namespace SQNetEntity{
             
             virtual void on_connect(SQFinalClient const& c)=0;
             virtual void on_leave(SOCKET const& s)=0;
-            virtual void on_read(SQ::SQPacket::SQPacket const& packet);
+            virtual void on_read(SQ::SQPacket::SQPacket const& packet)=0;
             
 
         protected:

@@ -112,7 +112,7 @@ namespace SQNetEntity{
 		
     void SQServer::getTicket(){
         while(true){ 
-            try{
+            try{ 
                 _mutex.lock();
                 if(_ticketQueue.empty()){   
                         _mutex.unlock();
@@ -200,9 +200,9 @@ namespace SQNetEntity{
         }
     }
 	 
-    void SQServer::on_read(SQ::SQPacket::SQPacket const& packet){
+    /*void SQServer::on_read(SQ::SQPacket::SQPacket const& packet){
         // catch event 
-    }
+    }*/
 	
 }
 }

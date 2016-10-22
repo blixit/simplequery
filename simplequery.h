@@ -1,13 +1,100 @@
 #ifndef SQEVENTS_H
 #define SQEVENTS_H
 
+#include <vector>
+#include <functional>
+
+
 namespace SQ{
 namespace SQEvents{
-  typedef void (*CallbackFunction)(void*);
-  
-  class SQEvents{
-    //
-  };
+    /**
+     * Un pointeur de fonctions
+     */
+    //typedef void* (*CallbackFunction)(void*);
+    typedef std::function<void*(void*)> CallbackFunction;
+    
+    /*class SQCallable{
+    public :
+        /*
+         * Callback function to trigger if a message is catched
+         * /
+        CallbackFunction run;
+        
+        SQCallable() : run(nullptr){}
+        SQCallable(CallbackFunction const& cb) : run(cb){}
+        SQCallable(SQCallable & cb) : run(cb.run){}
+    };*/
+    
+    /*
+     * Gestion des évènements
+     */
+    //template<typename T>
+    class SQEvents{
+        public :
+            SQEvents() : 
+            type('\0'), message("") {
+                callback = NULL;
+                parameters = NULL; 
+            }
+            /*SQEvents( T const& cb2, char const& c, std::string const& msg,void* params) : 
+                type('\0'), message("") {
+                callback = NULL;
+                callback2 = cb2;
+                parameters = NULL;                 
+            }*/
+            SQEvents(char const& c, std::string const& msg, CallbackFunction cb, void* params) : 
+            type(c), message(msg), callback(cb), parameters(params) {}
+            SQEvents(SQEvents const& e)  : 
+            type(e.getType()), message(e.getMessage()), callback(e.getCallback()), parameters(e.getParameters()) {}
+
+            inline char getType() const { return type;} 
+            inline void setType(char const& value) { type = value;} 
+            inline std::string getMessage() const { return message;} 
+            inline void setMessage(std::string const& value) { message = value;} 
+            inline CallbackFunction getCallback() const { return callback;} 
+            inline void setCallback(CallbackFunction const& value) { callback = value;} 
+            inline void* getParameters() const { return parameters;} 
+            inline void setParameters(void* value) { parameters = value;} 
+            
+            inline void* run(){
+                return callback(parameters); 
+            }
+            inline void toString(){
+                std::cout << getType() << " " << getMessage() << " " << std::endl;
+            }
+            
+            //les types de messages à tracker
+            static const char TYPE_ALL = 7; // m + p + d
+            static const char TYPE_M = 4; // m 
+            static const char TYPE_P = 2; // p
+            static const char TYPE_D = 1; // d  
+            
+        private :
+            /*
+             * type of message to track : 1.methode, 2.parameter or 3.data
+             */
+            char type;
+            /*
+             * message to track
+             */
+            std::string message;
+            /*
+             * Callback function to trigger if a message is catched
+             */
+            CallbackFunction callback;
+            //T callback2;
+            /*
+             * Parameters to give to the callback function
+             */
+            void* parameters;
+    };
+    
+    /**
+     * Type which represents a list of events.
+     */
+    typedef std::vector<SQEvents> SQEventsList;
+    /*template<typename T>
+    using SQEventsList = std::vector<SQEvents<T>> ;*/
   
 }
 }
@@ -259,6 +346,7 @@ namespace SQCommunicator{
 
 #include <memory>
 #include <atomic>
+#include <queue>
 
 namespace SQ{
 namespace SQNetEntity{
@@ -281,9 +369,12 @@ namespace SQNetEntity{
 
             inline bool isRunning(){return static_cast<bool>(_is_running.load(std::memory_order_relaxed)); }
             inline void isRunning(bool const& value){ _is_running.store(static_cast<int>(value),std::memory_order_relaxed); }
-
+            inline SQ::SQEvents::SQEventsList getEvents() { return std::move(events); } 
+            inline void setEvents(SQ::SQEvents::SQEventsList const& value) { events = value; }
             std::shared_ptr<SQCommunicator::SQCommunicator> com(){ return _com ; }
             SQCommunicator::SQCommunicator* ptrCom(){ return _com.get(); }
+                        
+            virtual void on_read(SQ::SQPacket::SQPacket const& packet)=0;
             
             void queryListener();
 
@@ -295,6 +386,8 @@ namespace SQNetEntity{
         private:
             static int _initializer;
             std::atomic<int> _is_running;
+            std::queue<int> _receivedPackets; 
+            SQ::SQEvents::SQEventsList events;
     };
 }
 }
@@ -383,7 +476,7 @@ namespace SQNetEntity{
             
             virtual void on_connect(SQFinalClient const& c)=0;
             virtual void on_leave(SOCKET const& s)=0;
-            virtual void on_read(SQ::SQPacket::SQPacket const& packet);
+            virtual void on_read(SQ::SQPacket::SQPacket const& packet)=0;
             
 
         protected:
