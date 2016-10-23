@@ -18,6 +18,10 @@ namespace SQNetEntity{
             void sconnect(std::string const& ip, int const& port);
             void sdisconnect();
             
+            SQFinalClient getAuthId(SOCKET const& s);
+            
+            virtual void on_connect(SQFinalClient const& c)=0;
+            virtual void on_leave(SOCKET const& s)=0;
             virtual bool on_read(SQ::SQPacket::SQPacket const& packet){return true; };
 
         protected:

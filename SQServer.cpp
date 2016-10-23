@@ -143,7 +143,8 @@ namespace SQNetEntity{
                     //call the routine callback 
                     SQFinalClient client(id,csock);
                     this->_clients.push_back(client);
-                    this->on_connect(client);		
+                    
+                    authentify(client);                    		
 
                     //wait for packet
                     std::thread(&SQ::SQNetEntity::SQServer::queryListener,this,SQFinalClient(id,csock)).detach();
@@ -179,8 +180,22 @@ namespace SQNetEntity{
         this->on_leave(s);    
     }
 
+    void SQServer::authentify(SQFinalClient const& client){
+        try{
+            std::unique_ptr<SQ::SQCommunicator::SQCommunicator> pcom = std::unique_ptr<SQCommunicator::SQCommunicator>(new SQCommunicator::SQCommunicator(client.getSock()));
+            if(pcom.get() == nullptr){
+                    throw SQException("[queryListener] The communicattor is not set.");
+            }
+            SQ::SQPacket::OptionsList list;  
+            
+            pcom.get()->write(SQ::SQPacket::SQPacket(client.getId(),SQ::SERVER_ID,SQ::post,SQ::PARAM_ID,list," "));
+            this->on_connect(client);
+        }catch(SQException & e){
+            sdisconnect(client.getSock());  
+        }
+    }
     void SQServer::queryListener(SQFinalClient const& c){
-        while(true){
+        while(isRunning()){
             try{
                 // read packet
                 SQ::SQPacket::SQPacket packet; 
@@ -194,12 +209,11 @@ namespace SQNetEntity{
                     SQ::SQNetEntity::SQNetEntity::bindExecute(packet, this->getEvents());
                 }
             }catch(SQException & e){
-                sdisconnect(c.sock);
-                Log("WAITPACKET : "+std::string(e.what()),DEBUGSTATE)
+               
                 break;
-            }
-            //on_leave
+            } 
         }
+        sdisconnect(c.sock); 
     }
 	 
     /*void SQServer::on_read(SQ::SQPacket::SQPacket const& packet){

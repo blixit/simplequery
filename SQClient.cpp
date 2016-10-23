@@ -35,22 +35,41 @@ namespace SQNetEntity{
         SOCKADDR_IN sin;
 
         if(s == INVALID_SOCKET)
-			throw SQException("The client initialization failed.");
+            throw SQException("The client initialization failed.");
 
         _com = std::shared_ptr<SQCommunicator::SQCommunicator>(new SQCommunicator::SQCommunicator(s));
 
-		sin.sin_addr.s_addr = inet_addr(ip.c_str()); // * l'adresse se trouve dans le champ h_addr de la structure hostinfo * /
-		sin.sin_port = htons(port); // * on utilise htons pour le port * /
-		sin.sin_family = AF_INET;
+        sin.sin_addr.s_addr = inet_addr(ip.c_str()); // * l'adresse se trouve dans le champ h_addr de la structure hostinfo * /
+        sin.sin_port = htons(port); // * on utilise htons pour le port * /
+        sin.sin_family = AF_INET;
 
-		if(connect(s,(SOCKADDR *) &sin, sizeof(SOCKADDR)) == SOCKET_ERROR){
+        if(connect(s,(SOCKADDR *) &sin, sizeof(SOCKADDR)) == SOCKET_ERROR){
             std::string msg = "The connection to [" + ip + ":" + SQ::PATCH::to_string(port) + "] failed.";
-			throw SQException(msg.c_str());
-		}
+            throw SQException(msg.c_str());
+        }
+        
+        SQFinalClient clientInfo = getAuthId(s);  
+        
+        isRunning(true);
+        
+        queryListener(clientInfo);
 
-		isRunning(true);
-
-	}
+    }
+    
+    SQFinalClient SQClient::getAuthId(SOCKET const& s){
+        
+        SQ::SQPacket::SQPacket packet; 
+        std::unique_ptr<SQ::SQCommunicator::SQCommunicator> pcom = std::unique_ptr<SQCommunicator::SQCommunicator>(new SQCommunicator::SQCommunicator(s));
+        if(pcom.get() == nullptr){
+            throw SQException("[getAuthId] The communicattor is not set.");
+        }
+        pcom.get()->read(packet);//, SQ::SQCommunicator::BUFFER_MAXSIZE);
+        this->on_read(packet);  
+        SQFinalClient clientInfo(packet.dest(),s); 
+        this->on_connect(clientInfo);
+        
+        return clientInfo;
+    } 
 
     void SQClient::sdisconnect(){
         if(_com.get()){
@@ -60,7 +79,25 @@ namespace SQNetEntity{
     }
     
     void SQClient::queryListener(SQFinalClient const& c){
-        //
+        while(isRunning()){
+            try{
+                // read packet
+                SQ::SQPacket::SQPacket packet; 
+                std::unique_ptr<SQ::SQCommunicator::SQCommunicator> pcom = std::unique_ptr<SQCommunicator::SQCommunicator>(new SQCommunicator::SQCommunicator(c.sock));
+                if(pcom.get() == nullptr){
+                        throw SQException("[queryListener] The communicattor is not set.");
+                }
+                pcom.get()->read(packet);//, SQ::SQCommunicator::BUFFER_MAXSIZE);
+                bool bind = this->on_read(packet);
+                if(bind){  
+                    SQ::SQNetEntity::SQNetEntity::bindExecute(packet, this->getEvents());
+                }
+            }catch(SQException & e){
+                
+                break;
+            } 
+        }
+        sdisconnect(); 
     }
 }
 }

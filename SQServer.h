@@ -68,6 +68,7 @@ namespace SQNetEntity{
             void queryListener(SQFinalClient const& c); 
             
             void sdisconnect(SOCKET const& s);
+            void authentify(SQFinalClient const& client);
     };
 }
 }

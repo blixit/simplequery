@@ -5,10 +5,13 @@
  
 class Client : public SQ::SQNetEntity::SQClient{
     public: 
+        SQ::SQNetEntity::SQFinalClient infos;
+        
         Client() : SQ::SQNetEntity::SQClient(){};
 
         void on_connect(SQ::SQNetEntity::SQFinalClient const& c){
-            std::cout << " Connected... " << std::endl;
+            infos = c;
+            std::cout << " Connected with ID " << c.getId() << "... " << std::endl;
         }
 
         void on_leave(SOCKET const& s){ 
