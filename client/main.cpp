@@ -29,10 +29,10 @@ int main(int argc, char** argv) {
     client.DEBUGSTATE = true;
     try{
         SQ::SQPacket::SQDataHeaders list;
-      list.insert(std::make_pair("content","sq"));
-      list.insert(std::make_pair("size","45"));
-      list.insert(std::make_pair("port","56"));
-      list.insert(std::make_pair("name","Le livre de la jungle"));
+        list.add("content","sq");
+        list.add("size","45");
+        list.add("port","56");
+        list.add("name","Le livre de la jungle");
         /*SQ::SQPacket::SQPacket p(0,0,7,1,list,"GET www.google.com");
         SQ::SQCommunicator::SQCommunicator com(-1);
         com.build(p);

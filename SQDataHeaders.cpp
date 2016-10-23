@@ -130,6 +130,10 @@ namespace SQPacket{
             return it->first;
         return "";
     }
+    
+    void SQDataHeaders::add(std::string const& key, std::string const& value){
+        insert(std::pair<std::string,std::string>(key,value)); 
+    }
  
 }
 }

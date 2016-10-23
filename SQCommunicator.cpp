@@ -37,7 +37,7 @@ namespace SQCommunicator{
 
         std::string strOption = ""; 
         //adding header '#size:datagrame_size'         
-        optlist.insert(std::pair<std::string,std::string>("#size",SQ::PATCH::to_string(packet.data().size())));
+        optlist.add("#size",SQ::PATCH::to_string(packet.data().size()));
 
         //convert options to a string
         strOption = optlist.preparedString();
@@ -134,14 +134,13 @@ namespace SQCommunicator{
             pos += optionStr.size() +1; 
             SQ::PATCH::split(part,optionStr,':'); 
             if(part.size() > 1)
-                list.insert(std::pair<std::string,std::string>(part[0],part[1]));  
+                list.add(part[0],part[1]);  
         }  
         if(nbOptions > 0){
             // +1 for the '\n' which ends the last option
             // +1 for the '\n' which ends options
             pos += 2; 
-        }
-        std::cout << "read ! opt size : "  << list.size() << std::endl;
+        } 
 
         //retrieving datagram size
         int dgramSize = -1;

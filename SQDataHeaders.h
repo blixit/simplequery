@@ -39,6 +39,9 @@ namespace SQPacket{
         std::string getValue(std::string const& key);
         std::string getKey(std::string const& value);
         
+        void add(std::string const& key, std::string const& value);
+        
+        
     private:
 
     };
