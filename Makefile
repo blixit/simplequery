@@ -12,7 +12,7 @@ SRCLIB = SQUtils.cpp $(SRC)
 OBJEXE = $(SRC:.cpp=.o)
 OBJLIB = $(SRCLIB:.cpp=.o)
 
-HEADERS = SQEvents.h SQUtils.h SQException.h SQPacket.h SQCommunicator.h SQNetEntity.h SQClient.h SQServer.h
+HEADERS = SQEvents.h SQUtils.h SQException.h SQDataHeaders.h SQPacket.h SQCommunicator.h SQNetEntity.h SQClient.h SQServer.h
 HEADERNAME = simplequery.h
 
 

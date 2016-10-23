@@ -25,24 +25,28 @@ namespace SQCommunicator{
      */
     void SQCommunicator::build(SQ::SQPacket::SQPacket const& packet){ 
         //checking reserved option 
-        for(auto opt : packet.getOptionsList()){
+        SQ::SQPacket::SQDataHeaders optlist = packet.getOptionsList(); 
+        if(optlist.findAnyReservedKey() != optlist.end())
+            throw SQ::SQException("[SQCommunicator::build] Option starting with '#' are reserved to the system.");
+            
+        /*for(auto opt : packet.getOptionsList()){
             if(std::get<0>(opt)[0] == '#'){
                 throw SQ::SQException("[SQCommunicator::build] Option starting with '#' are reserved to the system.");
             }
-        }             
+        }*/             
 
         std::string strOption = ""; 
-        //adding header '#size:datagrame_size' 
-        SQ::SQPacket::OptionsList optlist = packet.getOptionsList();
-        optlist.push_back(std::make_pair("#size",SQ::PATCH::to_string(packet.data().size())));
+        //adding header '#size:datagrame_size'         
+        optlist.insert(std::pair<std::string,std::string>("#size",SQ::PATCH::to_string(packet.data().size())));
 
         //convert options to a string
-        if(optlist.size() > 0){
+        strOption = optlist.preparedString();
+        /*if(optlist.size() > 0){
             for (auto option : optlist){
                 strOption += std::get<0>(option)+":"+std::get<1>(option)+"\n"; 
             }
             strOption += "\n";
-        }  
+        } */  
 
         // we add 1 for last caracter '\n'
         int sz = 1 + sizeof(packet.dest()) + sizeof(packet.src()) + sizeof(SQ::SQPacket::uchar) + sizeof(SQ::SQPacket::uchar) + sizeof(SQ::SQPacket::uchar) + strOption.size() + packet.data().size();
@@ -72,7 +76,7 @@ namespace SQCommunicator{
 
         memcpy(msg+pos,packet.data().c_str(),packet.data().size());
 
-        _datagram = std::string(msg,sz);
+        _datagram = std::string(msg,sz); 
 
         delete[] msg;
     }
@@ -115,7 +119,7 @@ namespace SQCommunicator{
         pos += sizeof(SQ::SQPacket::uchar);
         pos += 1;
 
-        SQ::SQPacket::OptionsList list;
+        SQ::SQPacket::SQDataHeaders list;
         std::vector<std::string> part;
 
         //let read option lines
@@ -130,22 +134,24 @@ namespace SQCommunicator{
             pos += optionStr.size() +1; 
             SQ::PATCH::split(part,optionStr,':'); 
             if(part.size() > 1)
-                list.push_back(std::make_pair(part[0],part[1]));  
+                list.insert(std::pair<std::string,std::string>(part[0],part[1]));  
         }  
         if(nbOptions > 0){
             // +1 for the '\n' which ends the last option
             // +1 for the '\n' which ends options
             pos += 2; 
         }
+        std::cout << "read ! opt size : "  << list.size() << std::endl;
 
         //retrieving datagram size
         int dgramSize = -1;
-        for(auto opt : list){
+        dgramSize = std::stoi(list.getValue("#size"));
+        /*for(auto opt : list){
             if(std::get<0>(opt) == "#size"){
                 dgramSize = std::stoi(std::get<1>(opt)); 
                 break;
             }
-        }
+        }*/
         if(dgramSize == -1) 
             throw SQ::SQException("[SQCommunicator::extract] The datagram size is not set.");
 
@@ -200,13 +206,11 @@ namespace SQCommunicator{
         _datagram.resize(static_cast<size_t>(_buffersize));
 							
         build(packet);
-        //memcpy(buffer,_datagram.c_str(),_buffersize);
-        //std::cout << "BUFFER SEND ::::: " << buffer << std::endl;
-        //int sock_err = send(sock(),buffer,_buffersize,0);
+        
         int sock_err = send(sock(),_datagram.c_str(),_buffersize,0);
-	std::cout << sock_err << " caracters sent" << std::endl;
+	//std::cout << sock_err << " caracters sent" << std::endl;
 
-        if(sock_err==1)
+        if(sock_err==0)
             throw SQ::SQException("[SQCommunicator::write] Sending packet failed.");
     }
 

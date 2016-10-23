@@ -7,11 +7,11 @@
 
 #include "SQException.h"
 #include "SQUtils.h"
+#include "SQDataHeaders.h"
 
 namespace SQ{
 namespace SQPacket{
-  typedef unsigned char uchar;
-  typedef std::vector< std::pair<std::string,std::string> > OptionsList;
+  typedef unsigned char uchar; 
 	
 	constexpr int UCHAR_MAX = 65535;
 
@@ -23,13 +23,13 @@ namespace SQPacket{
 	    int _src;
 	    uchar _method;
 	    uchar _parameter; 
-            OptionsList _optionslist; //<! list of options for this query
+            SQDataHeaders _optionslist; //<! list of options for this query
 	    std::string _data;
 		 
 
     public :
 	    SQPacket();
-	    SQPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, OptionsList list, std::string data );
+	    SQPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, SQDataHeaders list, std::string data );
 	    SQPacket(SQPacket const& p);
 	    ~SQPacket();
 
@@ -42,8 +42,8 @@ namespace SQPacket{
 		inline uchar parameter() const{return _parameter;}
 		inline void parameter(uchar value) { _parameter = value;}
 		inline int nbOptions() const{return _optionslist.size();}  
-		inline OptionsList getOptionsList() const{return _optionslist;}
-		inline void setOptionsList(OptionsList value) { _optionslist = value;}
+		inline SQDataHeaders getOptionsList() const{return _optionslist;}
+		inline void setOptionsList(SQDataHeaders value) { _optionslist = value;}
 		inline std::string data() const{return _data;}
 		inline void data(std::string value) { _data = value;}
                 

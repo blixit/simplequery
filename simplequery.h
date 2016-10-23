@@ -208,6 +208,55 @@ namespace SQ{
 }
 
 #endif // SQEXCEPTION_H
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   SQDataHeaders.h
+ * Author: Blixit 
+ *
+ * Created on 23 octobre 2016, 13:39
+ */
+
+#ifndef SQDATAHEADERS_H
+#define SQDATAHEADERS_H
+
+#include <algorithm>
+#include <map>
+
+namespace SQ{
+namespace SQPacket{
+    
+    typedef std::map<std::string,std::string>::iterator SQDataHeadersIterator;
+    
+    class SQDataHeaders : public std::map<std::string,std::string>{
+    public:        
+        
+        //use the constructor from vector
+        using std::map<std::string,std::string>::map;
+        
+        SQDataHeadersIterator findbyKey(std::string const& key);
+        SQDataHeadersIterator findbyKey(SQDataHeadersIterator const& begin, SQDataHeadersIterator const& end, std::string const& key);
+        SQDataHeadersIterator findAnyReservedKey();
+        SQDataHeadersIterator findAnyReservedKey(SQDataHeadersIterator const& begin, SQDataHeadersIterator const& end);
+        SQDataHeadersIterator findbyValue(std::string const& value);
+        SQDataHeadersIterator findbyValue(SQDataHeadersIterator const& begin, SQDataHeadersIterator const& end, std::string const& value);
+        
+        std::string preparedString();
+        std::string getValue(std::string const& key);
+        std::string getKey(std::string const& value);
+        
+    private:
+
+    };
+}
+}
+
+#endif /* SQDATAHEADERS_H */
+
 #ifndef INCLUDE_SQ_H
 #define INCLUDE_SQ_H
 
@@ -218,8 +267,7 @@ namespace SQ{
 
 namespace SQ{
 namespace SQPacket{
-  typedef unsigned char uchar;
-  typedef std::vector< std::pair<std::string,std::string> > OptionsList;
+  typedef unsigned char uchar; 
 	
 	constexpr int UCHAR_MAX = 65535;
 
@@ -231,13 +279,13 @@ namespace SQPacket{
 	    int _src;
 	    uchar _method;
 	    uchar _parameter; 
-            OptionsList _optionslist; //<! list of options for this query
+            SQDataHeaders _optionslist; //<! list of options for this query
 	    std::string _data;
 		 
 
     public :
 	    SQPacket();
-	    SQPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, OptionsList list, std::string data );
+	    SQPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, SQDataHeaders list, std::string data );
 	    SQPacket(SQPacket const& p);
 	    ~SQPacket();
 
@@ -250,8 +298,8 @@ namespace SQPacket{
 		inline uchar parameter() const{return _parameter;}
 		inline void parameter(uchar value) { _parameter = value;}
 		inline int nbOptions() const{return _optionslist.size();}  
-		inline OptionsList getOptionsList() const{return _optionslist;}
-		inline void setOptionsList(OptionsList value) { _optionslist = value;}
+		inline SQDataHeaders getOptionsList() const{return _optionslist;}
+		inline void setOptionsList(SQDataHeaders value) { _optionslist = value;}
 		inline std::string data() const{return _data;}
 		inline void data(std::string value) { _data = value;}
                 

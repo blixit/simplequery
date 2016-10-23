@@ -16,12 +16,14 @@
       <in>SQClientSession.h</in>
       <in>SQCommunicator.cpp</in>
       <in>SQCommunicator.h</in>
+      <in>SQDataHeaders.cpp</in>
       <in>SQEvents.cpp</in>
       <in>SQEvents.h</in>
       <in>SQException.cpp</in>
       <in>SQException.h</in>
       <in>SQNetEntity.cpp</in>
       <in>SQNetEntity.h</in>
+      <in>SQOptionList.h</in>
       <in>SQPacket.cpp</in>
       <in>SQPacket.h</in>
       <in>SQServer.cpp</in>

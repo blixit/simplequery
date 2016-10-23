@@ -155,7 +155,7 @@ namespace SQNetEntity{
                     //_mutex.unlock();
                 } 
             }catch(std::exception const& e){
-                    Log("The ticket office noticed a perturbation : "+std::string(e.what()),DEBUGSTATE) 
+                Log("The ticket office noticed a perturbation : "+std::string(e.what()),DEBUGSTATE) 
             }
         }
     }
@@ -186,11 +186,12 @@ namespace SQNetEntity{
             if(pcom.get() == nullptr){
                     throw SQException("[queryListener] The communicattor is not set.");
             }
-            SQ::SQPacket::OptionsList list;  
+            SQ::SQPacket::SQDataHeaders list;  
             
             pcom.get()->write(SQ::SQPacket::SQPacket(client.getId(),SQ::SERVER_ID,SQ::post,SQ::PARAM_ID,list," "));
             this->on_connect(client);
         }catch(SQException & e){
+            Log(std::string(e.what()),DEBUGSTATE) 
             sdisconnect(client.getSock());  
         }
     }
@@ -209,7 +210,7 @@ namespace SQNetEntity{
                     SQ::SQNetEntity::SQNetEntity::bindExecute(packet, this->getEvents());
                 }
             }catch(SQException & e){
-               
+                Log(std::string(e.what()),DEBUGSTATE) 
                 break;
             } 
         }

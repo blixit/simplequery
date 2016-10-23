@@ -22,7 +22,7 @@ namespace SQPacket{
             _optionslist = p.getOptionsList();
     }
     
-    SQPacket::SQPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, OptionsList list, std::string data )
+    SQPacket::SQPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, SQDataHeaders list, std::string data )
             : _dest(dest), _src(src), _method(method), _parameter(parameter), _optionslist(list), _data(data)
         {}
     

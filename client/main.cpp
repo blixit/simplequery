@@ -7,7 +7,8 @@ class Client : public SQ::SQNetEntity::SQClient{
     public: 
         SQ::SQNetEntity::SQFinalClient infos;
         
-        Client() : SQ::SQNetEntity::SQClient(){};
+        Client() : SQ::SQNetEntity::SQClient(), infos(0,0){ 
+        };
 
         void on_connect(SQ::SQNetEntity::SQFinalClient const& c){
             infos = c;
@@ -27,11 +28,11 @@ int main(int argc, char** argv) {
     Client client;   
     client.DEBUGSTATE = true;
     try{
-        SQ::SQPacket::OptionsList list;
-      list.push_back(std::make_pair("content","sq"));
-      list.push_back(std::make_pair("size","45"));
-      list.push_back(std::make_pair("port","56"));
-      list.push_back(std::make_pair("name","Le livre de la jungle"));
+        SQ::SQPacket::SQDataHeaders list;
+      list.insert(std::make_pair("content","sq"));
+      list.insert(std::make_pair("size","45"));
+      list.insert(std::make_pair("port","56"));
+      list.insert(std::make_pair("name","Le livre de la jungle"));
         /*SQ::SQPacket::SQPacket p(0,0,7,1,list,"GET www.google.com");
         SQ::SQCommunicator::SQCommunicator com(-1);
         com.build(p);
@@ -74,6 +75,6 @@ int main(int argc, char** argv) {
         Log(std::string(e.what()),client.DEBUGSTATE);
     }
    
-    SQ::SQNetEntity::SQNetEntity::initializer(); 
+    SQ::SQNetEntity::SQNetEntity::destroyer(); 
     return 0;
 }

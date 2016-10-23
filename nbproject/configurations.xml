@@ -5,9 +5,11 @@
       <in>SQClient.cpp</in>
       <in>SQClientSession.cpp</in>
       <in>SQCommunicator.cpp</in>
+      <in>SQDataHeaders.cpp</in>
       <in>SQEvents.cpp</in>
       <in>SQException.cpp</in>
       <in>SQNetEntity.cpp</in>
+      <in>SQOptionList.h</in>
       <in>SQPacket.cpp</in>
       <in>SQServer.cpp</in>
       <in>SQUtils.cpp</in>
@@ -61,6 +63,8 @@
         <ccTool flags="0">
         </ccTool>
       </item>
+      <item path="SQDataHeaders.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="SQEvents.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SQException.cpp" ex="false" tool="1" flavor2="8">
@@ -70,6 +74,8 @@
       <item path="SQNetEntity.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
+      </item>
+      <item path="SQOptionList.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SQPacket.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
