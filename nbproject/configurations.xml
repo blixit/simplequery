@@ -5,6 +5,7 @@
       <in>SQClient.cpp</in>
       <in>SQClientSession.cpp</in>
       <in>SQCommunicator.cpp</in>
+      <in>SQEvents.cpp</in>
       <in>SQException.cpp</in>
       <in>SQNetEntity.cpp</in>
       <in>SQPacket.cpp</in>
@@ -59,6 +60,8 @@
       <item path="SQCommunicator.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
+      </item>
+      <item path="SQEvents.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SQException.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">

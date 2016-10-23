@@ -47,31 +47,53 @@ namespace SQNetEntity{
 
         return false; //this line void compilation failure
     }
-    void SQNetEntity::on_read(SQ::SQPacket::SQPacket const& packet){   }
-    
     /**
-     * This function listens messages from the network while the server is running.
+     * Make a treatment on the incoming packet. This function is called before any callback function of
+     * the events list.
+     * This function is overriden by derivated classes.
+     * @param packet
+     * @return True to execute the default operations in the server chain right after on_read(). False
+     * to interrupt the chain. 
      */
-    void SQNetEntity::queryListener(){
-      if(_com.get() == nullptr){
-        throw SQException("[queryListener] The NetEntity communicator agent has not been initialized. You should launch an connection on client side or start the server.");
-      }
-      while(isRunning()){
-        try{
-          //packet p
-          //comm.read(p);
-          //cout << comm.requete() << endl;
-          /*if(_bind)
-            comm.bind(p);  */  
-					
-        }catch(SQException &e){
-          //if(comm.requete().length()==0)
-            isRunning(false); 
-        }catch(std::exception &e){
-          Log(std::string(e.what()),DEBUGSTATE); 
+    bool SQNetEntity::on_read(SQ::SQPacket::SQPacket const& packet){ return true;  }
+    void SQNetEntity::queryListener(SQFinalClient const& c){}
+     
+    bool SQNetEntity::bindExecute(SQ::SQPacket::SQPacket const& p, SQ::SQEvents::SQEventsList liste){  
+           
+        for(SQ::SQEvents::SQEvents ev : liste){  
+            if(ev.getType() == SQ::SQEvents::SQEVTYPE_ALL){  //0111
+                if(ev.getMessage() == SQ::PATCH::to_string((int)p.method())+'-'+SQ::PATCH::to_string((int)p.parameter())+'-'+p.data()){ 
+                    return ev.run((void*)(&p));
+                }
+            }else if(ev.getType() == SQ::SQEvents::SQEVTYPE_M){  // 0100 
+                 if(ev.getMessage() == SQ::PATCH::to_string((int)p.method())){ 
+                    return ev.run((void*)(&p));
+                }
+            }else if(ev.getType() == SQ::SQEvents::SQEVTYPE_P){  //0010
+                if(ev.getMessage() == SQ::PATCH::to_string((int)p.parameter())){ 
+                    return ev.run((void*)(&p));
+                }
+            }else if(ev.getType() == SQ::SQEvents::SQEVTYPE_D){  //0001                 
+                if(ev.getMessage() == p.data() ){ 
+                    return ev.run((void*)(&p));
+                }
+            }else if(ev.getType() == (SQ::SQEvents::SQEVTYPE_M|SQ::SQEvents::SQEVTYPE_P)){ ///0110 not 0001 
+                if(ev.getMessage() == SQ::PATCH::to_string((int)p.method())+'-'+SQ::PATCH::to_string((int)p.parameter())){  
+                    return ev.run((void*)(&p));
+                }
+            }else if(ev.getType() == (SQ::SQEvents::SQEVTYPE_M|SQ::SQEvents::SQEVTYPE_D)){ ///0101 not 0010
+                if(ev.getMessage() == SQ::PATCH::to_string((int)p.method())+'-'+p.data()){ 
+                    return ev.run((void*)(&p));
+                } 
+            }else if(ev.getType() == (SQ::SQEvents::SQEVTYPE_P|SQ::SQEvents::SQEVTYPE_D)){                     
+                 if(ev.getMessage() == SQ::PATCH::to_string((int)p.method())+'-'+SQ::PATCH::to_string((int)p.parameter())+'-'+p.data()){ 
+                    return ev.run((void*)(&p));
+                }                                     
+            }else{
+                throw SQException("[bind] The data type to track is not set.");
+            }
         }
-      }
-  }
-
+        return false;
+    }
 }
 }

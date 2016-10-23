@@ -17,10 +17,13 @@ namespace SQNetEntity{
 
             void sconnect(std::string const& ip, int const& port);
             void sdisconnect();
+            
+            virtual bool on_read(SQ::SQPacket::SQPacket const& packet){return true; };
 
         protected:
 
         private:
+            void queryListener(SQFinalClient const& c);
     };
 }
 }

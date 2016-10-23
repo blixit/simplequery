@@ -52,11 +52,15 @@ namespace SQNetEntity{
 
 	}
 
-	void SQClient::sdisconnect(){
-	    if(_com.get()){
-            close(_com.get()->sock());
-            _com.get()->sock(-1);
-	    }
-	}
+    void SQClient::sdisconnect(){
+        if(_com.get()){
+        close(_com.get()->sock());
+        _com.get()->sock(-1);
+        }
+    }
+    
+    void SQClient::queryListener(SQFinalClient const& c){
+        //
+    }
 }
 }

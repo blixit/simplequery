@@ -13,24 +13,7 @@ namespace SQNetEntity{
     constexpr int DEFAULT_MAX_CLIENT = 1024; //<! arbitrary max value
     constexpr int DEFAULT_CLIENT_NUMBER = 1; //<! arbitrary value, can be changed
   
-    constexpr int DEFAULT_PORT = 1607; //<! arbitrary value, can be changed
-  
-    class SQFinalClient{
-      public:
-        int id;
-        SOCKET sock;
-        
-        SQFinalClient(int const& i, SOCKET const& s) : id(i), sock(s){};
-        SQFinalClient(SQFinalClient const& c) : id(c.getId()), sock(c.getSock()){};
-        
-        bool operator==(SQFinalClient const& rhs) const { return this->id == rhs.id && this->sock == rhs.sock; };
-        
-        int getId() const { return id;}
-        void setId(int id) { this->id = id;}
-        SOCKET getSock() const { return sock;}
-        void setSock(SOCKET s) { this->sock = s;}
-        
-    };
+    constexpr int DEFAULT_PORT = 1607; //<! arbitrary value, can be changed  
   
     class SQServer : public SQNetEntity 
     {
@@ -57,7 +40,7 @@ namespace SQNetEntity{
             
             virtual void on_connect(SQFinalClient const& c)=0;
             virtual void on_leave(SOCKET const& s)=0;
-            virtual void on_read(SQ::SQPacket::SQPacket const& packet)=0;
+            virtual bool on_read(SQ::SQPacket::SQPacket const& packet){return true; };
             
 
         protected:
@@ -82,7 +65,7 @@ namespace SQNetEntity{
             
             SOCKET waitClient();
             void getTicket(); 
-            void waitPacket(SQFinalClient const& c); 
+            void queryListener(SQFinalClient const& c); 
             
             void sdisconnect(SOCKET const& s);
     };

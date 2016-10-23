@@ -133,7 +133,9 @@ namespace SQCommunicator{
                 list.push_back(std::make_pair(part[0],part[1]));  
         }  
         if(nbOptions > 0){
-            pos += 1; // +1 for the '\n' which ends options
+            // +1 for the '\n' which ends the last option
+            // +1 for the '\n' which ends options
+            pos += 2; 
         }
 
         //retrieving datagram size
@@ -151,7 +153,7 @@ namespace SQCommunicator{
 
         //resizing to the minimal string
         dgramSize = ( dgramSize <= (_datagram.size()-pos) )? dgramSize : _datagram.size()-pos; 
-        packet.data(std::string((msg+pos),dgramSize+1));
+        packet.data(std::string((msg+pos+1),dgramSize));
 
         delete[] msg; 
 

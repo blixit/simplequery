@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <utility>
+#include <sstream> 
 
 #include "SQException.h"
 #include "SQUtils.h"
@@ -47,6 +48,11 @@ namespace SQPacket{
 		inline void data(std::string value) { _data = value;}
                 
                 SQPacket& clear();
+                std::string toString(){
+                    std::ostringstream ss;
+                    ss << dest() << " " << src() << " " << (int)method() << " " << (int)parameter() << " " << data();
+                    return ss.str();
+                }
 
 
 

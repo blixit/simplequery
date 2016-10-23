@@ -3,21 +3,33 @@
 
 #include <vector>
 #include <functional>
+#include <iostream>
 
-#include "SQNetEntity.h"
+#include "SQPacket.h"
+
 
 namespace SQ{
 namespace SQEvents{
+    class SQPacket;
+    
+    typedef unsigned char uchar;
     /**
      * Un pointeur de fonctions
-     */
-    //typedef void* (*CallbackFunction)(void*);
-    typedef std::function<void*(void*)> SQCallbackFunction; 
+     */ 
+    typedef std::function<bool(void*, void*)> SQCallbackFunction; 
+     
+    //using SQCallbackFunction = std::function<bool(void*, void*)>;
+
+    //les types de messages à tracker
+    static const uchar SQEVTYPE_ALL = 7; // m + p + d
+    static const uchar SQEVTYPE_M = 4; // m 
+    static const uchar SQEVTYPE_P = 2; // p
+    static const uchar SQEVTYPE_D = 1; // d  
     
     /*
      * Gestion des évènements
      */
-    //template<typename T>
+    
     class SQEvents{
         public :
             SQEvents() : 
@@ -30,39 +42,33 @@ namespace SQEvents{
                 callback = NULL;
                 callback2 = cb2;
                 parameters = NULL;                 
-            }*/
-            SQEvents(char const& c, std::string const& msg, SQCallbackFunction cb, void* params) : 
+            }*/              
+            SQEvents(uchar const& c, std::string const& msg, SQCallbackFunction cb, void* params) : 
             type(c), message(msg), callback(cb), parameters(params) {}
             SQEvents(SQEvents const& e)  : 
             type(e.getType()), message(e.getMessage()), callback(e.getCallback()), parameters(e.getParameters()) {}
 
-            inline char getType() const { return type;} 
-            inline void setType(char const& value) { type = value;} 
+            inline uchar getType() const { return type;} 
+            inline void setType(uchar const& value) { type = value;} 
             inline std::string getMessage() const { return message;} 
             inline void setMessage(std::string const& value) { message = value;} 
             inline SQCallbackFunction getCallback() const { return callback;} 
             inline void setCallback(SQCallbackFunction const& value) { callback = value;} 
             inline void* getParameters() const { return parameters;} 
             inline void setParameters(void* value) { parameters = value;} 
-            
-            inline void* run(){
-                return callback(parameters); 
+             
+            inline bool run(void* p){
+                return callback(p,parameters); 
             }
             inline void toString(){
                 std::cout << getType() << " " << getMessage() << " " << std::endl;
-            }
-            
-            //les types de messages à tracker
-            static const char SQEVTYPE_ALL = 7; // m + p + d
-            static const char SQEVTYPE_M = 4; // m 
-            static const char SQEVTYPE_P = 2; // p
-            static const char SQEVTYPE_D = 1; // d  
+            }                   
             
         private :
             /*
              * type of message to track : 1.methode, 2.parameter or 3.data
              */
-            char type;
+            uchar type;
             /*
              * message to track
              */
@@ -83,7 +89,7 @@ namespace SQEvents{
      */
     typedef std::vector<SQEvents> SQEventsList;
     /*template<typename T>
-    using SQEventsList = std::vector<SQEvents<T>> ;*/
+    using SQEventsList = std::vector<SQEvents<T> ;*/
   
 }
 }

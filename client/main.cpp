@@ -2,13 +2,26 @@
 #include <sstream>
 
 #include "simplequery.h" 
+ 
+class Client : public SQ::SQNetEntity::SQClient{
+    public: 
+        Client() : SQ::SQNetEntity::SQClient(){};
 
-//using namespace std;
+        void on_connect(SQ::SQNetEntity::SQFinalClient const& c){
+            std::cout << " Connected... " << std::endl;
+        }
+
+        void on_leave(SOCKET const& s){ 
+            std::cout << " Disconnexion... " << std::endl;
+        }
+        
+        
+};
 
 int main(int argc, char** argv) { 
     SQ::SQNetEntity::SQNetEntity::initializer();
    
-    SQ::SQNetEntity::SQClient client;   
+    Client client;   
     client.DEBUGSTATE = true;
     try{
         SQ::SQPacket::OptionsList list;
@@ -32,17 +45,19 @@ int main(int argc, char** argv) {
             std::cout << "client 1 " << std::endl << "pcom : " << pcom.get() << std::endl;
             SQ::SQPacket::SQPacket p2(-1,18,1,2,list,"GET www.google.com");
             pcom->write(p2); 
+            p2.method(2);
+            pcom->write(p2); 
             std::cout << "Data : " << p2.data() << std::endl;
             std::cout << "nbOptions : " << p2.nbOptions() << std::endl;
         
-            pcom->read(packet);//, SQ::SQCommunicator::BUFFER_MAXSIZE);
+            /*pcom->read(packet);//, SQ::SQCommunicator::BUFFER_MAXSIZE);
           
             std::cout << "src : " << packet.src() << std::endl; 
             std::cout << "dest : " << packet.dest() << std::endl; 
             std::cout << "method : " << (int)packet.method() << std::endl; 
             std::cout << "param : " << (int)packet.parameter() << std::endl; 
             std::cout << "options : " << packet.nbOptions() << std::endl; 
-            std::cout << "data : " << packet.data() << std::endl; 
+            std::cout << "data : " << packet.data() << std::endl; */
         }
 
         if(pcom2){

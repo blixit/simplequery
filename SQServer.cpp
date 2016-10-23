@@ -107,7 +107,8 @@ namespace SQNetEntity{
             shutdown(_com.get()->sock(),2);
             close(_com.get()->sock());
             _com.get()->sock(-1);
-	    }
+	}
+        this->isRunning(false);
     }
 		
     void SQServer::getTicket(){
@@ -145,7 +146,7 @@ namespace SQNetEntity{
                     this->on_connect(client);		
 
                     //wait for packet
-                    std::thread(&SQ::SQNetEntity::SQServer::waitPacket,this,SQFinalClient(id,csock)).detach();
+                    std::thread(&SQ::SQNetEntity::SQServer::queryListener,this,SQFinalClient(id,csock)).detach();
 
                 }else{
                     //_mutex.lock();
@@ -178,19 +179,20 @@ namespace SQNetEntity{
         this->on_leave(s);    
     }
 
-    void SQServer::waitPacket(SQFinalClient const& c){
+    void SQServer::queryListener(SQFinalClient const& c){
         while(true){
             try{
                 // read packet
                 SQ::SQPacket::SQPacket packet; 
                 std::unique_ptr<SQ::SQCommunicator::SQCommunicator> pcom = std::unique_ptr<SQCommunicator::SQCommunicator>(new SQCommunicator::SQCommunicator(c.sock));
-                std::cout << "waiting packet ..." << pcom.get()->sock() << std::endl;
                 if(pcom.get() == nullptr){
-                        throw SQException("pcom is null");
+                        throw SQException("[queryListener] The communicattor is not set.");
                 }
                 pcom.get()->read(packet);//, SQ::SQCommunicator::BUFFER_MAXSIZE);
-                this->on_read(packet);
-                //
+                bool bind = this->on_read(packet);
+                if(bind){  
+                    SQ::SQNetEntity::SQNetEntity::bindExecute(packet, this->getEvents());
+                }
             }catch(SQException & e){
                 sdisconnect(c.sock);
                 Log("WAITPACKET : "+std::string(e.what()),DEBUGSTATE)
