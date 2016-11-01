@@ -276,7 +276,7 @@ namespace SQPacket{
 
   constexpr int HEADERLENGTH = 11;
 
-  class SQPacket{
+  class SQStringPacket{
   	private:
 	    int _dest;
 	    int _src;
@@ -287,10 +287,10 @@ namespace SQPacket{
 		 
 
     public :
-	    SQPacket();
-	    SQPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, SQDataHeaders list, std::string data );
-	    SQPacket(SQPacket const& p);
-	    ~SQPacket();
+	    SQStringPacket();
+	    SQStringPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, SQDataHeaders list, std::string data );
+	    SQStringPacket(SQStringPacket const& p);
+	    ~SQStringPacket();
 
 		inline int dest() const{return _dest;}
 		inline void dest(int value) { _dest = value;}
@@ -306,7 +306,7 @@ namespace SQPacket{
 		inline std::string data() const{return _data;}
 		inline void data(std::string value) { _data = value;}
                 
-                SQPacket& clear();
+                SQStringPacket& clear();
                 std::string toString(){
                     std::ostringstream ss;
                     ss << dest() << " " << src() << " " << (int)method() << " " << (int)parameter() << " " << data();
@@ -379,11 +379,11 @@ namespace SQCommunicator{
 			inline std::string datagram() {return _datagram; };
 			inline void datagram(std::string const& value) {_datagram = value; };
 
-			void build(SQ::SQPacket::SQPacket const& packet);
-			void extract(SQ::SQPacket::SQPacket & packet); 
+			void build(SQ::SQPacket::SQStringPacket const& packet);
+			void extract(SQ::SQPacket::SQStringPacket & packet); 
 
-			void read(SQ::SQPacket::SQPacket & packet, int const& buffersize = BUFFER_MEANSIZE) ;
-			void write(SQ::SQPacket::SQPacket const& packet, int const& buffersize = BUFFER_MEANSIZE) ;
+			void read(SQ::SQPacket::SQStringPacket & packet, int const& buffersize = BUFFER_MEANSIZE) ;
+			void write(SQ::SQPacket::SQStringPacket const& packet, int const& buffersize = BUFFER_MEANSIZE) ;
 
             SQCommunicator &operator=(SQCommunicator const &) = delete;
 	};
@@ -442,10 +442,10 @@ namespace SQNetEntity{
             std::shared_ptr<SQCommunicator::SQCommunicator> com(){ return _com ; }
             SQCommunicator::SQCommunicator* ptrCom(){ return _com.get(); }
                         
-            virtual bool on_read(SQ::SQPacket::SQPacket const& packet)=0;
+            virtual bool on_read(SQ::SQPacket::SQStringPacket const& packet)=0;
             
             virtual void queryListener(SQFinalClient const& c)=0; 
-            static bool bindExecute(SQ::SQPacket::SQPacket const& p, SQ::SQEvents::SQEventsList liste);  
+            static bool bindExecute(SQ::SQPacket::SQStringPacket const& p, SQ::SQEvents::SQEventsList liste);  
 
             bool DEBUGSTATE = false;
 
@@ -484,7 +484,7 @@ namespace SQNetEntity{
             
             virtual void on_connect(SQFinalClient const& c)=0;
             virtual void on_leave(SOCKET const& s)=0;
-            virtual bool on_read(SQ::SQPacket::SQPacket const& packet){return true; };
+            virtual bool on_read(SQ::SQPacket::SQStringPacket const& packet){return true; };
 
         protected:
 
@@ -535,7 +535,7 @@ namespace SQNetEntity{
             
             virtual void on_connect(SQFinalClient const& c)=0;
             virtual void on_leave(SOCKET const& s)=0;
-            virtual bool on_read(SQ::SQPacket::SQPacket const& packet){return true; };
+            virtual bool on_read(SQ::SQPacket::SQStringPacket const& packet){return true; };
             
 
         protected:

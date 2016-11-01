@@ -22,7 +22,7 @@ namespace SQNetEntity{
             
             virtual void on_connect(SQFinalClient const& c)=0;
             virtual void on_leave(SOCKET const& s)=0;
-            virtual bool on_read(SQ::SQPacket::SQPacket const& packet){return true; };
+            virtual bool on_read(SQ::SQPacket::SQStringPacket const& packet){return true; };
 
         protected:
 

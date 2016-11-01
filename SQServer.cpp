@@ -188,7 +188,7 @@ namespace SQNetEntity{
             }
             SQ::SQPacket::SQDataHeaders list;  
             
-            pcom.get()->write(SQ::SQPacket::SQPacket(client.getId(),SQ::SERVER_ID,SQ::post,SQ::PARAM_ID,list," "));
+            pcom.get()->write(SQ::SQPacket::SQStringPacket(client.getId(),SQ::SERVER_ID,SQ::post,SQ::PARAM_ID,list," "));
             this->on_connect(client);
         }catch(SQException & e){
             Log(std::string(e.what()),DEBUGSTATE) 
@@ -199,7 +199,7 @@ namespace SQNetEntity{
         while(isRunning()){
             try{
                 // read packet
-                SQ::SQPacket::SQPacket packet; 
+                SQ::SQPacket::SQStringPacket packet; 
                 std::unique_ptr<SQ::SQCommunicator::SQCommunicator> pcom = std::unique_ptr<SQCommunicator::SQCommunicator>(new SQCommunicator::SQCommunicator(c.sock));
                 if(pcom.get() == nullptr){
                         throw SQException("[queryListener] The communicattor is not set.");

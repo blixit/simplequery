@@ -55,10 +55,10 @@ namespace SQNetEntity{
      * @return True to execute the default operations in the server chain right after on_read(). False
      * to interrupt the chain. 
      */
-    bool SQNetEntity::on_read(SQ::SQPacket::SQPacket const& packet){ return true;  }
+    bool SQNetEntity::on_read(SQ::SQPacket::SQStringPacket const& packet){ return true;  }
     void SQNetEntity::queryListener(SQFinalClient const& c){}
      
-    bool SQNetEntity::bindExecute(SQ::SQPacket::SQPacket const& p, SQ::SQEvents::SQEventsList liste){  
+    bool SQNetEntity::bindExecute(SQ::SQPacket::SQStringPacket const& p, SQ::SQEvents::SQEventsList liste){  
            
         for(SQ::SQEvents::SQEvents ev : liste){  
             if(ev.getType() == SQ::SQEvents::SQEVTYPE_ALL){  //0111

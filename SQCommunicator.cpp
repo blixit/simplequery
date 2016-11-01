@@ -23,30 +23,18 @@ namespace SQCommunicator{
      * @param packet the packet to convert
      * @throw SQ::SQException if the list of options contains a reserved option
      */
-    void SQCommunicator::build(SQ::SQPacket::SQPacket const& packet){ 
+    void SQCommunicator::build(SQ::SQPacket::SQStringPacket const& packet){ 
         //checking reserved option 
         SQ::SQPacket::SQDataHeaders optlist = packet.getOptionsList(); 
         if(optlist.findAnyReservedKey() != optlist.end())
             throw SQ::SQException("[SQCommunicator::build] Option starting with '#' are reserved to the system.");
-            
-        /*for(auto opt : packet.getOptionsList()){
-            if(std::get<0>(opt)[0] == '#'){
-                throw SQ::SQException("[SQCommunicator::build] Option starting with '#' are reserved to the system.");
-            }
-        }*/             
-
+          
         std::string strOption = ""; 
         //adding header '#size:datagrame_size'         
         optlist.add("#size",SQ::PATCH::to_string(packet.data().size()));
 
         //convert options to a string
-        strOption = optlist.preparedString();
-        /*if(optlist.size() > 0){
-            for (auto option : optlist){
-                strOption += std::get<0>(option)+":"+std::get<1>(option)+"\n"; 
-            }
-            strOption += "\n";
-        } */  
+        strOption = optlist.preparedString(); 
 
         // we add 1 for last caracter '\n'
         int sz = 1 + sizeof(packet.dest()) + sizeof(packet.src()) + sizeof(SQ::SQPacket::uchar) + sizeof(SQ::SQPacket::uchar) + sizeof(SQ::SQPacket::uchar) + strOption.size() + packet.data().size();
@@ -86,7 +74,7 @@ namespace SQCommunicator{
      * @param packet 
      * @throw SQ::SQException
      */
-    void SQCommunicator::extract(SQ::SQPacket::SQPacket & packet){
+    void SQCommunicator::extract(SQ::SQPacket::SQStringPacket & packet){
         if(_datagram.size()==0)
             throw SQ::SQException("[SQCommunicator::Extract] The packet to extract is empty.");
 
@@ -171,7 +159,7 @@ namespace SQCommunicator{
      * The maximum value is BUFFER_MAXSIZE.
      * @throw SQ::SQException
      */
-    void SQCommunicator::read(SQ::SQPacket::SQPacket & packet, int const& buffersize){
+    void SQCommunicator::read(SQ::SQPacket::SQStringPacket & packet, int const& buffersize){
         _buffersize = buffersize <= BUFFER_MINSIZE
                 ? BUFFER_MINSIZE
                 : (buffersize > BUFFER_MAXSIZE ? BUFFER_MAXSIZE : buffersize );
@@ -197,7 +185,7 @@ namespace SQCommunicator{
      * @param packet 
      * @param buffersize 
      */
-    void SQCommunicator::write(SQ::SQPacket::SQPacket const& packet, int const& buffersize){
+    void SQCommunicator::write(SQ::SQPacket::SQStringPacket const& packet, int const& buffersize){
         _buffersize = buffersize <= BUFFER_MINSIZE
                 ? BUFFER_MINSIZE
                 : (buffersize > BUFFER_MAXSIZE ? BUFFER_MAXSIZE : buffersize );

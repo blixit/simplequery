@@ -17,7 +17,7 @@ namespace SQPacket{
 
   constexpr int HEADERLENGTH = 11;
 
-  class SQPacket{
+  class SQStringPacket{
   	private:
 	    int _dest;
 	    int _src;
@@ -28,10 +28,10 @@ namespace SQPacket{
 		 
 
     public :
-	    SQPacket();
-	    SQPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, SQDataHeaders list, std::string data );
-	    SQPacket(SQPacket const& p);
-	    ~SQPacket();
+	    SQStringPacket();
+	    SQStringPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, SQDataHeaders list, std::string data );
+	    SQStringPacket(SQStringPacket const& p);
+	    ~SQStringPacket();
 
 		inline int dest() const{return _dest;}
 		inline void dest(int value) { _dest = value;}
@@ -47,7 +47,7 @@ namespace SQPacket{
 		inline std::string data() const{return _data;}
 		inline void data(std::string value) { _data = value;}
                 
-                SQPacket& clear();
+                SQStringPacket& clear();
                 std::string toString(){
                     std::ostringstream ss;
                     ss << dest() << " " << src() << " " << (int)method() << " " << (int)parameter() << " " << data();

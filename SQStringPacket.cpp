@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "SQPacket.h"
+#include "SQStringPacket.h"
 
 namespace SQ{
 namespace SQPacket{
-    SQPacket::SQPacket(){
+    SQStringPacket::SQStringPacket(){
             _dest = 0;
             _src = 0;
             _method = 0;
@@ -13,7 +13,7 @@ namespace SQPacket{
             _optionslist.clear();
     }
     
-    SQPacket::SQPacket(SQPacket const& p){
+    SQStringPacket::SQStringPacket(SQStringPacket const& p){
             _dest = p.dest();
             _src = p.src();
             _method = p.method();
@@ -22,13 +22,13 @@ namespace SQPacket{
             _optionslist = p.getOptionsList();
     }
     
-    SQPacket::SQPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, SQDataHeaders list, std::string data )
+    SQStringPacket::SQStringPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, SQDataHeaders list, std::string data )
             : _dest(dest), _src(src), _method(method), _parameter(parameter), _optionslist(list), _data(data)
         {}
     
-    SQPacket::~SQPacket(){	}
+    SQStringPacket::~SQStringPacket(){	}
 
-    SQPacket& SQPacket::clear(){
+    SQStringPacket& SQStringPacket::clear(){
         _dest = 0;
         _src = 0;
         _method = 0;

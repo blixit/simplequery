@@ -58,7 +58,7 @@ namespace SQNetEntity{
     
     SQFinalClient SQClient::getAuthId(SOCKET const& s){
         
-        SQ::SQPacket::SQPacket packet; 
+        SQ::SQPacket::SQStringPacket packet; 
         std::unique_ptr<SQ::SQCommunicator::SQCommunicator> pcom = std::unique_ptr<SQCommunicator::SQCommunicator>(new SQCommunicator::SQCommunicator(s));
         if(pcom.get() == nullptr){
             throw SQException("[getAuthId] The communicattor is not set.");
@@ -84,7 +84,7 @@ namespace SQNetEntity{
         while(isRunning()){
             try{
                 // read packet
-                SQ::SQPacket::SQPacket packet; 
+                SQ::SQPacket::SQStringPacket packet; 
                 std::unique_ptr<SQ::SQCommunicator::SQCommunicator> pcom = std::unique_ptr<SQCommunicator::SQCommunicator>(new SQCommunicator::SQCommunicator(c.sock));
                 if(pcom.get() == nullptr){
                         throw SQException("[queryListener] The communicattor is not set.");

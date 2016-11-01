@@ -21,7 +21,7 @@
     typedef struct in_addr IN_ADDR;
 #endif
 
-#include "SQPacket.h"
+#include "SQStringPacket.h"
 
 namespace SQ{
 namespace SQCommunicator{
@@ -56,11 +56,11 @@ namespace SQCommunicator{
 			inline std::string datagram() {return _datagram; };
 			inline void datagram(std::string const& value) {_datagram = value; };
 
-			void build(SQ::SQPacket::SQPacket const& packet);
-			void extract(SQ::SQPacket::SQPacket & packet); 
+			void build(SQ::SQPacket::SQStringPacket const& packet);
+			void extract(SQ::SQPacket::SQStringPacket & packet); 
 
-			void read(SQ::SQPacket::SQPacket & packet, int const& buffersize = BUFFER_MEANSIZE) ;
-			void write(SQ::SQPacket::SQPacket const& packet, int const& buffersize = BUFFER_MEANSIZE) ;
+			void read(SQ::SQPacket::SQStringPacket & packet, int const& buffersize = BUFFER_MEANSIZE) ;
+			void write(SQ::SQPacket::SQStringPacket const& packet, int const& buffersize = BUFFER_MEANSIZE) ;
 
             SQCommunicator &operator=(SQCommunicator const &) = delete;
 	};

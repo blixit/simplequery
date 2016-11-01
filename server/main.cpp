@@ -21,17 +21,7 @@ class Server : public SQ::SQNetEntity::SQServer{
             std::cout << " The client on socket " << s << " is disconnected ... " << std::endl;
         }
 
-        bool on_read(SQ::SQPacket::SQPacket const& packet){
-            std::cout << " A packet read ... " << std::endl;
-            std::cout << "src : " << packet.src() << std::endl; 
-            std::cout << "dest : " << packet.dest() << std::endl; 
-            std::cout << "method : " << (int)packet.method() << std::endl; 
-            std::cout << "param : " << (int)packet.parameter() << std::endl; 
-            std::cout << "options : " << packet.nbOptions() << std::endl; 
-            //std::cout << "data : " << packet.data() << std::endl; 
-            for(auto opt : packet.getOptionsList()){
-                std::cout << " - " << std::get<0>(opt)+":"+std::get<1>(opt) << std::endl;
-            }
+        bool on_read(SQ::SQPacket::SQStringPacket const& packet){ 
             /*
              * If a registered SQEvent handles this packet and you want to execute the related callback function,
              * just return true. Else return false;
@@ -41,14 +31,14 @@ class Server : public SQ::SQNetEntity::SQServer{
         
         void* on_test(void* packet, void* args){
             std::cout << " test executed on " << ((Server*)args)->port() << std::endl;
-            SQ::SQPacket::SQPacket p = *(SQ::SQPacket::SQPacket*)packet;
+            SQ::SQPacket::SQStringPacket p = *(SQ::SQPacket::SQStringPacket*)packet;
             std::cout << p.toString() << std::endl;
             return args;
         }
         
         void* on_data(void* packet, void* args){
             std::cout << " data received on " << ((Server*)args)->port() << std::endl;
-            SQ::SQPacket::SQPacket p = *(SQ::SQPacket::SQPacket*)packet;
+            SQ::SQPacket::SQStringPacket p = *(SQ::SQPacket::SQStringPacket*)packet;
             std::cout << p.toString() << std::endl;
             return args;
         }
@@ -62,10 +52,7 @@ int main(/*int argc, char** argv*/) {
     Server server;
     server.DEBUGSTATE = true;
     server.port(SQ::SQNetEntity::DEFAULT_PORT); //1607
-    server.maxClients(2);
-
-    std::cout << "Entity is server ? " << server.is_server() << std::endl;
-    std::cout << "Is server running ? " << server.isRunning() << std::endl;
+    server.maxClients(2); 
       
     //Events
     SQ::SQEvents::SQEventsList events;

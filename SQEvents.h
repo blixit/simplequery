@@ -5,7 +5,7 @@
 #include <functional>
 #include <iostream>
 
-#include "SQPacket.h"
+#include "SQStringPacket.h"
 
 
 namespace SQ{

@@ -50,10 +50,10 @@ namespace SQNetEntity{
             std::shared_ptr<SQCommunicator::SQCommunicator> com(){ return _com ; }
             SQCommunicator::SQCommunicator* ptrCom(){ return _com.get(); }
                         
-            virtual bool on_read(SQ::SQPacket::SQPacket const& packet)=0;
+            virtual bool on_read(SQ::SQPacket::SQStringPacket const& packet)=0;
             
             virtual void queryListener(SQFinalClient const& c)=0; 
-            static bool bindExecute(SQ::SQPacket::SQPacket const& p, SQ::SQEvents::SQEventsList liste);  
+            static bool bindExecute(SQ::SQPacket::SQStringPacket const& p, SQ::SQEvents::SQEventsList liste);  
 
             bool DEBUGSTATE = false;
 
