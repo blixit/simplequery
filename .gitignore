@@ -1,3 +1,5 @@
+*.o
+*.a
 client/*.exe
 client/sqlog
 client/*.o
@@ -7,5 +9,3 @@ server/*.o
 TODO
 main.pcc
 sqlog
-*.o
-*.a

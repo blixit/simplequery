@@ -5,7 +5,6 @@
 #include <functional>
 #include <iostream>
 
-#include "SQStringPacket.h"
 
 
 namespace SQ{
@@ -94,7 +93,8 @@ namespace SQEvents{
 }
 }
 
-#endif // SQEVENTS_H#ifndef INCLUDE_SQUTILS_H
+#endif // SQEVENTS_H
+#ifndef INCLUDE_SQUTILS_H
 #define INCLUDE_SQUTILS_H
 
 #include <sstream>
@@ -207,7 +207,8 @@ namespace SQ{
     };
 }
 
-#endif // SQEXCEPTION_H/*
+#endif // SQEXCEPTION_H
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -259,6 +260,100 @@ namespace SQPacket{
 
 #endif /* SQDATAHEADERS_H */
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   SQPacket.h
+ * Author: Blixit 
+ *
+ * Created on 1 novembre 2016, 22:56
+ */
+
+#ifndef SQPACKET_H
+#define SQPACKET_H
+
+namespace SQ{
+namespace SQPacket{
+    
+    typedef unsigned char uchar; 
+    constexpr int UCHAR_MAX = 65535;
+    constexpr int HEADERLENGTH = 11;
+    
+class SQPacket {
+public:
+    SQPacket();
+    SQPacket(const SQPacket& orig);
+    virtual ~SQPacket();
+private:
+
+};
+
+}
+}
+
+#endif /* SQPACKET_H */
+
+#ifndef INCLUDE_SQ_H
+#define INCLUDE_SQ_H
+
+#include <vector>
+#include <utility>
+#include <sstream> 
+
+
+namespace SQ{
+namespace SQPacket{
+
+  class SQStringPacket : public SQ::SQPacket::SQPacket{
+  	private:
+	    int _dest;
+	    int _src;
+	    uchar _method;
+	    uchar _parameter; 
+            SQDataHeaders _optionslist; //<! list of options for this query
+	    std::string _data;
+		 
+
+    public :
+	    SQStringPacket();
+	    SQStringPacket(int const& dest, int const& src, uchar const& method, uchar const& parameter, SQDataHeaders list, std::string data );
+	    SQStringPacket(SQStringPacket const& p);
+	    ~SQStringPacket();
+
+		inline int dest() const{return _dest;}
+		inline void dest(int value) { _dest = value;}
+		inline int src() const{return _src;}
+		inline void src(int value) { _src = value;}
+		inline uchar method() const{return _method;}
+		inline void method(uchar value) { _method = value;}
+		inline uchar parameter() const{return _parameter;}
+		inline void parameter(uchar value) { _parameter = value;}
+		inline int nbOptions() const{return _optionslist.size();}  
+		inline SQDataHeaders getOptionsList() const{return _optionslist;}
+		inline void setOptionsList(SQDataHeaders value) { _optionslist = value;}
+		inline std::string data() const{return _data;}
+		inline void data(std::string value) { _data = value;}
+                
+                SQStringPacket& clear();
+                std::string toString(){
+                    std::ostringstream ss;
+                    ss << dest() << " " << src() << " " << (int)method() << " " << (int)parameter() << " " << data();
+                    return ss.str();
+                }
+
+
+
+
+  };
+
+}
+}
+
+#endif //INCLUDE_SQ_H
 #ifndef SQCOMMUNICATOR_H
 #define SQCOMMUNICATOR_H
 
@@ -282,7 +377,6 @@ namespace SQPacket{
     typedef struct in_addr IN_ADDR;
 #endif
 
-#include "SQStringPacket.h"
 
 namespace SQ{
 namespace SQCommunicator{
@@ -329,14 +423,13 @@ namespace SQCommunicator{
 }
 }
 
-#endif#ifndef SQNETENTITY_H
+#endif
+#ifndef SQNETENTITY_H
 #define SQNETENTITY_H
 
 #include <memory>
 #include <atomic>
 #include <queue>
-#include "SQCommunicator.h"
-#include "SQEvents.h"
 
 namespace SQ{
 namespace SQNetEntity{
@@ -399,10 +492,10 @@ namespace SQNetEntity{
     };
 }
 }
-#endif // SQNETENTITY_H#ifndef SQCLIENT_H
+#endif // SQNETENTITY_H
+#ifndef SQCLIENT_H
 #define SQCLIENT_H
 
-#include "SQNetEntity.h"
 
 namespace SQ{
 namespace SQNetEntity{
@@ -432,7 +525,8 @@ namespace SQNetEntity{
     };
 }
 }
-#endif // SQCLIENT_H#ifndef SQSERVER_H
+#endif // SQCLIENT_H
+#ifndef SQSERVER_H
 #define SQSERVER_H
 
 #include <atomic>
@@ -440,7 +534,6 @@ namespace SQNetEntity{
 #include <queue>
 #include <random> 
 
-#include "SQNetEntity.h"
 
 namespace SQ{
 namespace SQNetEntity{

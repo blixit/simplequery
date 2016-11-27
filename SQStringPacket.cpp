@@ -4,7 +4,7 @@
 
 namespace SQ{
 namespace SQPacket{
-    SQStringPacket::SQStringPacket(){
+    SQStringPacket::SQStringPacket() {
             _dest = 0;
             _src = 0;
             _method = 0;

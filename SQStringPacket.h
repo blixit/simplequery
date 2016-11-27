@@ -8,14 +8,10 @@
 #include "SQException.h"
 #include "SQUtils.h"
 #include "SQDataHeaders.h"
+#include "SQPacket.h"
 
 namespace SQ{
 namespace SQPacket{
-  typedef unsigned char uchar; 
-	
-	constexpr int UCHAR_MAX = 65535;
-
-  constexpr int HEADERLENGTH = 11;
 
   class SQStringPacket{
   	private:

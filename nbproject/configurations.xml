@@ -10,6 +10,8 @@
       <in>SQEvents.cpp</in>
       <in>SQException.cpp</in>
       <in>SQNetEntity.cpp</in>
+      <in>SQPacket.cpp</in>
+      <in>SQPacket.h</in>
       <in>SQServer.cpp</in>
       <in>SQStringPacket.cpp</in>
       <in>SQUtils.cpp</in>
@@ -76,6 +78,12 @@
       <item path="SQNetEntity.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
+      </item>
+      <item path="SQPacket.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="SQPacket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SQServer.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">

@@ -24,10 +24,12 @@
       <in>SQException.h</in>
       <in>SQNetEntity.cpp</in>
       <in>SQNetEntity.h</in>
+      <in>SQPacket.cpp</in>
       <in>SQPacket.h</in>
       <in>SQServer.cpp</in>
       <in>SQServer.h</in>
       <in>SQStringPacket.cpp</in>
+      <in>SQStringPacket.h</in>
       <in>SQUtils.cpp</in>
       <in>SQUtils.h</in>
       <in>simplequery.h</in>
